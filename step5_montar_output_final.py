@@ -73,5 +73,19 @@ if escalar_supervisor:
 print("\n=== STEP 5 Concluido ===")
 print("=== Workflow AgentePlanoResolucao Finalizado ===")
 
+# Envia task com o output final no formato especificado
+from abstra.tasks import send_task
+
+print("\n[ENVIANDO TASK] Enviando output final para o workflow pai...")
+
+send_task(
+    type="plano_resolucao_completo",
+    payload=output_final
+)
+
+print("✅ Task enviada com sucesso!")
+print(f"   Tipo: plano_resolucao_completo")
+print(f"   Payload: {len(acoes_validadas)} acoes, escalar={escalar_supervisor}")
+
 # Completa a task
 task.complete()
