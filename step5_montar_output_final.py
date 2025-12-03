@@ -27,13 +27,33 @@ escalar_supervisor = payload.get("escalar_supervisor", False)
 violacoes = payload.get("violacoes", [])
 avaliacao_qualidade = payload.get("avaliacao_qualidade", {})
 
+# ✅ IMPORTANTE: Extrai os dados da decisao de politica (Component 1)
+contexto_original = payload.get("contexto_original", {})
+decisao_politica = {
+    "TIPO_SOLICITACAO": contexto_original.get("tipo_solicitacao", ""),
+    "MOTIVO": contexto_original.get("motivo", ""),
+    "ELEGIVEL": contexto_original.get("elegivel", False),
+    "VALOR_REEMBOLSO": contexto_original.get("valor_reembolso", 0.0),
+    "CODIGO_REGRA_APLICADA": contexto_original.get("codigo_regra_aplicada", ""),
+    "RESTRICOES": contexto_original.get("restricoes", None)
+}
+
+# ✅ NOVO: Extrai o input_original completo (todos os dados que vieram no Step 1)
+input_original = payload.get("input_original", {})
+
 print(f"\n[CONSOLIDACAO] Montando output final...")
 
 # Monta o output final no formato especificado
 output_final = {
     "ACOES": acoes_validadas,
     "RESPOSTA_SUGERIDA": resposta_final,
-    "ESCALAR_SUPERVISOR": escalar_supervisor
+    "ESCALAR_SUPERVISOR": escalar_supervisor,
+    
+    # ✅ ADICIONA: Dados da decisao de politica (Component 1)
+    "decisao_politica": decisao_politica,
+    
+    # ✅ ADICIONA: Input original completo (todos os dados recebidos no Step 1)
+    "input_original": input_original
 }
 
 print(f"\n{'='*60}")
@@ -86,6 +106,8 @@ send_task(
 print("✅ Task enviada com sucesso!")
 print(f"   Tipo: plano_resolucao_completo")
 print(f"   Payload: {len(acoes_validadas)} acoes, escalar={escalar_supervisor}")
+print(f"   Decisao politica incluida: elegivel={decisao_politica.get('ELEGIVEL', False)}, valor=R$ {decisao_politica.get('VALOR_REEMBOLSO', 0):.2f}")
+print(f"   Input original incluido: {len(input_original)} campos")
 
 # Completa a task
 task.complete()

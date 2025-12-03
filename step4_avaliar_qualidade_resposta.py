@@ -23,6 +23,7 @@ print(f"Tipo da task: {task.type}")
 
 # Extrai os dados
 contexto_original = payload.get("contexto_original", {})
+input_original = payload.get("input_original", {})
 acoes_validadas = payload.get("acoes_validadas", [])
 resposta_sugerida = payload.get("resposta_sugerida", "")
 escalar_supervisor = payload.get("escalar_supervisor", False)
@@ -115,6 +116,7 @@ if qualidade_geral < 6:
 # Prepara payload para o proximo step
 payload_proximo_step = {
     "contexto_original": contexto_original,
+    "input_original": input_original,
     "acoes_validadas": acoes_validadas,
     "resposta_final": resposta_final,
     "escalar_supervisor": escalar_supervisor,

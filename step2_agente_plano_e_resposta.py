@@ -16,10 +16,14 @@ print("=== STEP 2: Agente Plano e Resposta ===")
 
 # Recebe a task do step anterior
 task = get_trigger_task()
-contexto_agente = task.payload
+payload = task.payload
 
 print(f"\nTask recebida: {task.id}")
 print(f"Tipo da task: {task.type}")
+
+# Extrai contexto_agente e input_original
+contexto_agente = payload.get("contexto_agente", {})
+input_original = payload.get("input_original", {})
 
 # Extrai os dados do contexto
 texto_solicitacao = contexto_agente.get("texto_solicitacao", "")
@@ -108,6 +112,7 @@ print(f"  - Escalar supervisor: {resposta_ia.get('ESCALAR_SUPERVISOR', False)}")
 # Prepara payload para o proximo step
 payload_proximo_step = {
     "contexto_original": contexto_agente,
+    "input_original": input_original,
     "resposta_ia": resposta_ia
 }
 

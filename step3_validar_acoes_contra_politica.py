@@ -22,6 +22,7 @@ print(f"Tipo da task: {task.type}")
 
 # Extrai os dados
 contexto_original = payload.get("contexto_original", {})
+input_original = payload.get("input_original", {})
 resposta_ia = payload.get("resposta_ia", {})
 
 # Dados do contexto original
@@ -105,6 +106,7 @@ print(f"  - Escalar supervisor: {escalar_supervisor}")
 # Prepara payload para o proximo step
 payload_proximo_step = {
     "contexto_original": contexto_original,
+    "input_original": input_original,
     "acoes_validadas": acoes_validadas,
     "resposta_sugerida": resposta_sugerida,
     "escalar_supervisor": escalar_supervisor,

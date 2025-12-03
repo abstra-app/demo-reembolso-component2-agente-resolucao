@@ -49,7 +49,7 @@ if not tipo_solicitacao:
     task.complete()
     exit()
 
-# Monta o contexto consolidado
+# Monta o contexto consolidado para a IA
 contexto_agente = {
     "texto_solicitacao": texto_solicitacao,
     "tipo_solicitacao": tipo_solicitacao,
@@ -60,11 +60,29 @@ contexto_agente = {
     "restricoes": restricoes
 }
 
-print(f"\n[OUTPUT] Contexto montado com sucesso!")
-print(f"  - Total de campos: {len(contexto_agente)}")
+# Preserva APENAS os campos do input original do cliente (sem campos de decisao)
+# Campos de decisao (TIPO_SOLICITACAO, ELEGIVEL, etc.) vao para decisao_politica
+input_original = {
+    "texto_solicitacao": input_data.get("texto_solicitacao", ""),
+    "booking_id": input_data.get("booking_id", ""),
+    "canal_venda": input_data.get("canal_venda", ""),
+    "valor_pago": input_data.get("valor_pago", 0),
+    "data_viagem": input_data.get("data_viagem", ""),
+    "data_solicitacao": input_data.get("data_solicitacao", ""),
+    "dias_antes": input_data.get("dias_antes", 0)
+}
 
-# Envia task para o proximo step
-send_task("contexto_montado", contexto_agente)
+print(f"\n[OUTPUT] Contexto montado com sucesso!")
+print(f"  - Campos do contexto: {len(contexto_agente)}")
+print(f"  - Campos do input original: {len(input_original)}")
+
+# Envia task para o proximo step com ambos os dados
+payload_proximo_step = {
+    "contexto_agente": contexto_agente,
+    "input_original": input_original
+}
+
+send_task("contexto_montado", payload_proximo_step)
 
 print(f"\n[TASK ENVIADA] Tipo: 'contexto_montado'")
 print("=== STEP 1 Concluido ===")
